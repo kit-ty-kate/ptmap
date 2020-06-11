@@ -188,6 +188,11 @@ let rec filter pr = function
   | Leaf (k, v) as t -> if pr k v then t else Empty
   | Branch (p,m,t0,t1) -> branch (p, m, filter pr t0, filter pr t1)
 
+let rec filter_map f = function
+  | Empty -> Empty
+  | Leaf (k, v) -> (match f k v with Some v -> Leaf (k, v) | None -> Empty)
+  | Branch (p,m,t0,t1) -> branch (p, m, filter_map f t0, filter_map f t1)
+
 let partition p s =
   let rec part (t,f as acc) = function
     | Empty -> acc
